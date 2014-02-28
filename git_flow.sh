@@ -5,9 +5,9 @@
 # 引数4個の時(まだタグがつけられていない状態、 初回実行)
 
 # $1 : repository url
-# $3 : next_set_tag_name
-# $4 : prefix (解凍したときのディレクトリ名)
-# $5 : zip_name (zipファイル名)
+# $2 : next_set_tag_name
+# $3 : prefix (解凍したときのディレクトリ名)
+# $4 : zip_name (zipファイル名)
 
 # 引数5個の時(既にタグがつけられている状態)
 
@@ -21,61 +21,61 @@
 
 # 特定タグを指定していないとき
 git_flow_first() {
-  local repository_url=$1
+	local repository_url=$1
 	local next_set_tag_name=$2
 	local prefix=$3
 	local zip_name=$4
 
-  local base_dir=$(cd `dirname $0`; pwd)
+	local base_dir=$(cd `dirname $0`; pwd)
 	local clone_dir="$base_dir/clone_dir"
 
 	# git clone
-  echo "clone開始---------------"
+	echo "clone開始---------------"
 	git clone $repository_url $clone_dir
-  echo "clone終了---------------"
+	echo "clone終了---------------"
 
-  ## clonedirに移動
+	## clonedirに移動
 	cd $clone_dir
 
-  # 第二引数のtag nameからリビジョンID取得
-  echo "リビジョンID取得開始---------------"
+	# 第二引数のtag nameからリビジョンID取得
+	echo "リビジョンID取得開始---------------"
 	revision_id=`git show HEAD | grep commit | cut -c8- | head -n 1`
 
 	echo $revision_id
-  echo "リビジョンID取得終了---------------"
+	echo "リビジョンID取得終了---------------"
 
-  git_flow $revision_id $next_set_tag_name $prefix $zip_name $base_dir $clone_dir
+	git_flow $revision_id $next_set_tag_name $prefix $zip_name $base_dir $clone_dir
 }
 
 
 # 特定タグを指定している時
 git_flow_update() {
-  local repository_url=$1
+	local repository_url=$1
 	local target_tag_name=$2
 	local next_set_tag_name=$3
 	local prefix=$4
 	local zip_name=$5
 
-  local base_dir=$(cd `dirname $0`; pwd)
+	local base_dir=$(cd `dirname $0`; pwd)
 	local clone_dir="$base_dir/clone_dir"
 
 	# git clone
-  echo "clone開始---------------"
+	echo "clone開始---------------"
 	git clone $repository_url $clone_dir
-  echo "clone終了---------------"
+	echo "clone終了---------------"
 
-  ## clonedirに移動
+	## clonedirに移動
 	cd $clone_dir
 
-  # 第二引数のtag nameからリビジョンID取得
-  echo "リビジョンID取得開始---------------"
+	# 第二引数のtag nameからリビジョンID取得
+	echo "リビジョンID取得開始---------------"
 	revision_id=`git show $target_tag_name | grep commit | cut -c8- | head -n 1`
 
 	echo $revision_id
-  echo "リビジョンID取得終了---------------"
+	echo "リビジョンID取得終了---------------"
 
 
-  git_flow $revision_id $next_set_tag_name $prefix $zip_name $base_dir $clone_dir
+	git_flow $revision_id $next_set_tag_name $prefix $zip_name $base_dir $clone_dir
 }
 
 
@@ -85,13 +85,13 @@ git_flow() {
 	local next_set_tag_name=$2
 	local prefix=$3
 	local zip_name=$4
-  local base_dir=$5
+	local base_dir=$5
 	local clone_dir=$6
 
 
-  echo "差分アーカイブ開始---------"
+	echo "差分アーカイブ開始---------"
 
-  $base_dir/git_diff_archive.sh $revision_id $prefix $zip_name
+	$base_dir/git_diff_archive.sh $revision_id $prefix $zip_name
 
 	# 次のタグセット
 	echo "新しくタグをセット: $next_set_tag_name -------------------"
@@ -109,12 +109,14 @@ git_flow() {
 	rm -rf $clone_dir
 }
 
+# base_dir=$(cd `dirname $0`; pwd)
+# echo $base_dir
 
 
-if [ $# -eq 4 ]; 
+if [ $# -eq 4 ];
 then
   git_flow_first $1 $2 $3 $4
-elif [ $# -eq 5 ]; 
+elif [ $# -eq 5 ];
 then
   git_flow_update $1 $2 $3 $4 $5
 else

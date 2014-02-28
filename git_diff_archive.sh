@@ -12,20 +12,20 @@
 
 git_diff_archive()  {
 	local revision=$1
-  local prefix=$2
-  local zip_name=$3
+	local prefix=$2
+	local zip_name=$3
 
 	diff="git diff --name-only $revision HEAD"
 
-  git archive --format=zip --prefix="$prefix/" HEAD `eval $diff` -o $zip_name
+	git archive --format=zip --prefix="$prefix/" HEAD `eval $diff` -o $zip_name
 }
 
 
-if [ $# -eq 3 ]; 
+if [ $# -eq 3 ];
 then
 	echo "アーカイブ開始---------"
 
-  git_diff_archive $1 $2 $3
+	git_diff_archive $1 $2 $3
 
 	echo "アーカイブ終了---------"
 else
